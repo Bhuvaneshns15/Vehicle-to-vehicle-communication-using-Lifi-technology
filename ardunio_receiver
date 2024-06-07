@@ -1,0 +1,27 @@
+// Receiver code for V2V communication using LiFi
+
+int photodiodePin = A0;  // Photodiode connected to analog pin A0
+int threshold = 512;     // Threshold for detecting HIGH/LOW
+
+void setup() {
+  Serial.begin(9600);  // Start serial communication
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char data = receiveData();  // Receive data using photodiode
+    Serial.print(data);  // Print the received data
+  }
+}
+
+char receiveData() {
+  char data = 0;
+  for (int i = 0; i < 8; i++) {
+    int sensorValue = analogRead(photodiodePin);
+    if (sensorValue > threshold) {
+      data |= (1 << (7 - i));  // Set the corresponding bit to 1
+    }
+    delay(100);  // Adjust delay for appropriate baud rate
+  }
+  return data;
+}
