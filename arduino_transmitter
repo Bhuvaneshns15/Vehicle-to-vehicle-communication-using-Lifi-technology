@@ -1,0 +1,23 @@
+// Transmitter code for V2V communication using LiFi
+
+int ledPin = 9;  // LED connected to digital pin 9
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);  // Start serial communication
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char data = Serial.read();  // Read the incoming data
+    sendData(data);  // Send data using LED
+  }
+}
+
+void sendData(char data) {
+  for (int i = 7; i >= 0; i--) {
+    int bit = (data >> i) & 0x01;  // Extract each bit
+    digitalWrite(ledPin, bit);     // Write the bit to LED
+    delay(100);  // Adjust delay for appropriate baud rate
+  }
+}
